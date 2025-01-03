@@ -35,7 +35,7 @@ the bytes will be the peer public (or "shared public") key between the client an
 
 2. The server compute the shared secret from its generated private key (normally in DER format) with the peer public key using secp384r1
 
-3. The server now generate random bytes with the size of 16, and contact it with like shared secret before hashing the key:
+3. The server now generate random bytes with the size of 16, and contact it with the shared secret before hashing the key:
 ```
 Hash Seed = Random bytes + Shared secret
 ```
