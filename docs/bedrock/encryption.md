@@ -1,6 +1,5 @@
 ---
 mentions:
-    - theaddonn
     - Lompandi
 ---
 
