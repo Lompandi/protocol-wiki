@@ -1,6 +1,5 @@
 ---
 mentions:
-    - akashic-records-of-the-abyss
     - theaddonn
     - Lompandi
 ---
@@ -91,7 +90,7 @@ the decoded JWT payload part will look like this:
 }
 ```
 
-Inside extra data, there is several fields:
+Inside extra data, there are several fields:
 
 ## extraData
 
