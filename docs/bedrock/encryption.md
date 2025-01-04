@@ -4,11 +4,9 @@ mentions:
 ---
 
 # Encryption
-
-## Summary
 The encryption of the MCBE protocol uses ECDH (Elliptic Curve Diffie–Hellman) for key exchange and AES256-GCM for generating key and encryption
 
-# Key Exchange
+## Key Exchange
 The key exchange will start right after the login packet is received, the server will follow these step to initialize and start encryption:
 
 Let say in the login packet, the last chain of the JWT is decoded into this:
@@ -27,22 +25,20 @@ Let say in the login packet, the last chain of the JWT is decoded into this:
   "identityPublicKey": "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEsczVxuDnxpD2EqyqK0HUXtJbtFq5ntqUpiPb/eM7pelEoSh3ijKZnM2t6LaDMOzXP015p   wsjthhLjnthK3KBj1gM8Vh8p1RRVXb0xSFU2hcWD3TpScBD9Vk8qnPOhH"
 ```
 
-0. Before encryption, the server will prepare itself a pair of keys.
+### Sequence
+1. Before encryption, the server will prepare itself a pair of keys.
 
-1. The server extract the value of the identityPublicKey and decode the key using base64 into sequence of bytes,
-the bytes will be the peer public (or "shared public") key between the client and the server encoded in DER format.
+2. The server extracts the value of the identityPublicKey and decodes the key using base64 into sequence of bytes.
+These bytes are the peer public (or "shared public") key between the client and the server, encoded in DER format.
 
-2. The server compute the shared secret from its generated private key (normally in DER format) with the peer public key using secp384r1
+3. The server computes the shared secret from its generated private key (normally in DER format) with the peer public key using secp384r1.
 
-3. The server generates a 16-byte salt and concatenates it with the shared secret before performing the hashing operation. The resulting hash seed is defined as:
+4. The server generates a 16-byte salt and concatenates it with the shared secret before performing the hashing operation. The resulting hash seed is defined as:
 ```
 Hash Seed = Random bytes + Shared secret
 ```
 
-4. The server will now hash the key using Sha256, the hashed key will be the key used for encryption and decryption
-
-5. The server will used hashed key output to initialize AES256-GCM, with the Nonce (or Initialize vector) from the first 16 bytes 
-of the hashed key
+4. The server hashes the key using the SHA-256 algorithm. The resulting hashed key is then used for both encryption and decryption operations. This hashed key also serves to initialize the AES-256-GCM encryption process, where the first 16 bytes of the hashed key are utilized as the nonce (or initialization vector, IV).
 
 # Bedrock dedicated server's implementation
 
