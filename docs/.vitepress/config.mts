@@ -39,6 +39,7 @@ export default defineConfig({
                     { text: 'Codec', link: '/bedrock/codec' },
                     { text: 'NBT', link: '/bedrock/nbt' },
                     { text: 'Login', link: '/bedrock/login' },
+                    { text: 'Encryption', link: '/bedrock/encryption' },
                 ]
             },
             {
