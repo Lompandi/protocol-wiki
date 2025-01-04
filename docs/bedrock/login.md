@@ -1,23 +1,19 @@
 ---
 mentions:
-    - theaddonn
     - Lompandi
 ---
 
 # Login
 
-The login packet is sent after the RequestNetworkSetting packet, 
-It contains two part:
- - Network protocol version
- - Connection request string
+The Login packet is transmitted by the client following the RequestNetworkSetting packet. It consists of two fields:
 
-## Network protocol version
-- This field contains the protocol version the client is using, 
-which is used to double-check if the client is not changing network version since it send the RequestNetworkSetting packet
+| Name              |Data Type    |Notes                                                  | 
+| ------------------|-----------------------------------------------------------|------|
+| Client network version          | Big-Endian Integer|  Indicates the protocol version the client is using. | 
+| Token Chain       | String |Additional details are provided below|
 
-
-## Connection request string
-- This field is more interesting, it contains raw string in this format:
+## Token Chain
+- The token chain contains raw string in this format:
 ```json
 {
   "chain": [
@@ -30,7 +26,7 @@ which is used to double-check if the client is not changing network version sinc
 The whole data is in a json and there's only one key which is 
 the "chain"
 
-The chain contains array of jwts, and the receiver follow these step to decrypt the JWT
+The chain contains array of jwts, and the receiver follow these step to process the JWT
 
 Let make an example, assuming we have a single JWT string:
 
@@ -50,8 +46,8 @@ each is split by a dot (".")
 }
 ```
 
-2. The receiver decode the ```x5u``` field using base64 into sequence of bytes, the bytes will be the decryption key in DER format, the receiver then serialize the key and use it to decode rest part of the JWT, the fully decoded JWT will look something like this:
-
+2. The receiver decodes the ```x5u``` field using Base64, resulting in a sequence of bytes. These bytes are used to verify the signature. The receiver then decodes the JWT, and the decoded output will resemble the following:
+ 
 **Header:**
 ```json
 {
@@ -99,7 +95,7 @@ Inside extra data, there are several fields:
 | identity          | Identity value for the player                             |
 | displayName       | The name that will be displayed on the server             |
 | XUID              | Client XUID                                               |
-| titleId           | The title id use to identify player                       |
+| titleId           | The game version the client is using                       |
 | sandboxId         | usuage Unknown, default value: ```RETAIL```               |
 
 Overall, the last chain is especially important as the server will get the information about the user from this field and also the encryption initialize key, which will be discuss in [encryption](encryption.md)
